@@ -1,40 +1,48 @@
 -include env_make
 
-VERSION ?= apache2.4
+VERSION ?= 2.4
+TAG ?= $(VERSION)
 
-REPO = docksal/web
-NAME = docksal-apache-2.4
+REPO ?= docksal/apache
+NAME ?= docksal-apache-$(VERSION)
+
+BASE_IMAGE_TAG = $(VERSION)
+
+ifneq ($(STABILITY_TAG),)
+    ifneq ($(TAG),latest)
+        override TAG := $(TAG)-$(STABILITY_TAG)
+    endif
+endif
 
 .PHONY: build test push shell run start stop logs clean release
 
+default: build
+
 build:
-	fin docker build -t $(REPO):$(VERSION) .
+	docker build -t $(REPO):$(TAG) .
 
 test:
-	IMAGE=$(REPO):$(VERSION) NAME=$(NAME) ../tests/test.bats
+	IMAGE=$(REPO):$(TAG) REPO=$(REPO) NAME=$(NAME) VERSION=$(VERSION) ../tests/test.bats
 
 push:
-	fin docker push $(REPO):$(VERSION)
+	docker push $(REPO):$(TAG)
 
 shell:
-	fin docker run --rm --name $(NAME) -it $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(VERSION) /bin/bash
+	docker run --rm --name $(NAME) -it $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(TAG) /bin/bash
 
 run:
-	fin docker run --rm --name $(NAME) $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(VERSION)
+	docker run --rm --name $(NAME) $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(TAG) $(CMD)
 
 start:
-	fin docker run -d --name $(NAME) $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(VERSION)
+	docker run -d --name $(NAME) $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(TAG)
 
 stop:
-	fin docker stop $(NAME)
+	docker stop $(NAME)
 
 logs:
-	fin docker logs $(NAME)
+	docker logs $(NAME)
 
 clean:
-	fin docker rm -f $(NAME)
+	docker rm -f $(NAME)
 
-release: build
-	make push -e VERSION=$(VERSION)
-
-default: build
+release: build push
