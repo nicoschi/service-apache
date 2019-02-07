@@ -1,7 +1,6 @@
-language: generic
+dist: xenial
 
-services:
-  - docker
+language: minimal
 
 env:
   matrix:
@@ -9,7 +8,7 @@ env:
     - VERSION=apache2.4
 
 install:
-  - curl -fsSL get.docksal.io | sh
+  - curl -fsSL get.docksal.io | bash
   - fin version
   - fin sysinfo
 

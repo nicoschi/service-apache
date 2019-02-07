@@ -1,8 +1,8 @@
-FROM httpd:2.4-alpine
+FROM httpd:2.4.35-alpine
 
 # Generate a self-signed cert
 RUN apk add --no-cache openssl \
-	&& openssl req -batch -x509 -newkey rsa:4096 -days 3650 -nodes -sha256 \
+	&& openssl req -batch -x509 -newkey rsa:4096 -days 3650 -nodes -sha256 -subj "/" \
 		-keyout /usr/local/apache2/conf/server.key -out /usr/local/apache2/conf/server.crt \
 	&& apk del openssl
 
@@ -30,9 +30,13 @@ RUN set -x \
 
 COPY httpd-foreground /usr/local/bin/
 COPY conf /usr/local/apache2/conf
+COPY healthcheck.sh /opt/healthcheck.sh
 
 WORKDIR /var/www
 
 EXPOSE 80 443
 
 CMD ["httpd-foreground"]
+
+# Health check script
+HEALTHCHECK --interval=5s --timeout=1s --retries=12 CMD ["/opt/healthcheck.sh"]
