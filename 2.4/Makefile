@@ -1,5 +1,6 @@
 -include env_make
 
+FROM ?= httpd:2.4.35-alpine
 VERSION ?= 2.4
 TAG ?= $(VERSION)
 
@@ -19,7 +20,7 @@ endif
 default: build
 
 build:
-	docker build -t $(REPO):$(TAG) .
+	docker build -t $(REPO):$(TAG) --build-arg FROM=$(FROM) --build-arg VERSION=$(VERSION) .
 
 test:
 	IMAGE=$(REPO):$(TAG) REPO=$(REPO) NAME=$(NAME) VERSION=$(VERSION) ../tests/test.bats
