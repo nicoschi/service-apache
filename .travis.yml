@@ -3,18 +3,25 @@ dist: xenial
 language: minimal
 
 env:
+  global:
+    - REPO=docksal/apache
+
   matrix:
-    - VERSION=apache2.2
-    - VERSION=apache2.4
+    - VERSION=2.4 FROM=httpd:2.4.35-alpine TAGS=2.4,latest
 
 install:
-  - curl -fsSL get.docksal.io | bash
+  # Install Docksal to have a matching versions of Docker on the build host
+  - curl -fsSL https://get.docksal.io | bash
   - fin version
   - fin sysinfo
 
 script:
   - cd ${VERSION}
-  - make && make test
+  - make
+  - make test
+
+after_success:
+  - ${TRAVIS_BUILD_DIR}/release.sh
 
 after_failure:
   - make logs

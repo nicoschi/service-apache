@@ -1,4 +1,5 @@
-FROM httpd:2.4.35-alpine
+ARG FROM
+FROM ${FROM}
 
 # Generate a self-signed cert
 RUN apk add --no-cache openssl \
