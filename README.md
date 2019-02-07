@@ -4,13 +4,12 @@ This image(s) is part of the [Docksal](http://docksal.io) image library.
 
 ## Versions
 
-- apache2.2 (based on http:2.2-alpine)
 - apache2.4 (based on http:2.4-alpine)
 
 ## Features
 
 - SSL enabled (self-signed cert)
-- PHP handling via FastCGI (`mod_proxy_fcgi`) (both 2.2 and 2.4)
+- PHP handling via FastCGI (`mod_proxy_fcgi`)
 - HTTP Basic Authentication
 - Support for configuration overrides
 
