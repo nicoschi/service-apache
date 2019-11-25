@@ -40,6 +40,6 @@ clean:
 	docker rm -f $(NAME) >/dev/null 2>&1 || true
 
 release:
-    @$(TRAVIS_BUILD_DIR)/scripts/docker-push.sh
+	@$(TRAVIS_BUILD_DIR)/scripts/docker-push.sh
 
 default: build
