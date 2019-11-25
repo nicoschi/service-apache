@@ -2,38 +2,33 @@
 
 FROM ?= httpd:2.4.35-alpine
 VERSION ?= 2.4
-TAG ?= $(VERSION)
+SOFTWARE_VERSION ?= $(VERSION)
+BUILD_TAG ?= $(VERSION)
 
 REPO ?= docksal/apache
 NAME ?= docksal-apache-$(VERSION)
 
-BASE_IMAGE_TAG = $(VERSION)
-
-ifneq ($(STABILITY_TAG),)
-	ifneq ($(TAG),latest)
-		override TAG := $(TAG)-$(STABILITY_TAG)
-	endif
-endif
+.EXPORT_ALL_VARIABLES:
 
 .PHONY: build test push shell run start stop logs clean release
 
 build:
-	docker build -t $(REPO):$(TAG) --build-arg FROM=$(FROM) --build-arg VERSION=$(VERSION) .
+	docker build -t $(REPO):$(BUILD_TAG) --build-arg FROM=$(FROM) .
 
 test:
-	IMAGE=$(REPO):$(TAG) REPO=$(REPO) NAME=$(NAME) VERSION=$(VERSION) ../tests/test.bats
+	IMAGE=$(REPO):$(BUILD_TAG) REPO=$(REPO) NAME=$(NAME) ../tests/test.bats
 
 push:
-	docker push $(REPO):$(TAG)
+	docker push $(REPO):$(BUILD_TAG)
 
 shell: clean
-	docker run --rm --name $(NAME) -it $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(TAG) /bin/bash
+	docker run --rm --name $(NAME) -it $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(BUILD_TAG) /bin/bash
 
 run: clean
-	docker run --rm --name $(NAME) -it $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(TAG)
+	docker run --rm --name $(NAME) -it $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(BUILD_TAG)
 
 start: clean
-	docker run -d --name $(NAME) $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(TAG)
+	docker run -d --name $(NAME) $(PORTS) $(VOLUMES) $(ENV) $(REPO):$(BUILD_TAG)
 
 stop:
 	docker stop $(NAME)
@@ -44,6 +39,7 @@ logs:
 clean:
 	docker rm -f $(NAME) >/dev/null 2>&1 || true
 
-release: build push
+release:
+    @$(TRAVIS_BUILD_DIR)/scripts/docker-push.sh
 
 default: build
