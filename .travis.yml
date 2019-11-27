@@ -5,6 +5,7 @@ language: minimal
 env:
   global:
     - REPO=docksal/apache
+    - LATEST_VERSION=2.4
 
   matrix:
     - VERSION=2.4 FROM=httpd:2.4.35-alpine
