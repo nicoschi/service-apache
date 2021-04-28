@@ -66,23 +66,23 @@ _healthcheck_wait ()
 
 	### Tests ###
 
-	run curl -sSk -I http://test.docksal:2580
+	run curl -sSk -I http://test.docksal.site:2580
 	[[ "$output" =~ "HTTP/1.1 200 OK" ]]
 	unset output
 
-	run curl -sSk https://test.docksal:25443
+	run curl -sSk https://test.docksal.site:25443
 	[[ "$output" =~ "It works!" ]]
 	unset output
 
-	run curl -sSk -I https://test.docksal:25443
+	run curl -sSk -I https://test.docksal.site:25443
 	[[ "$output" =~ "HTTP/1.1 200 OK" ]]
 	unset output
 
-	run curl -sSk https://test.docksal:25443
+	run curl -sSk https://test.docksal.site:25443
 	[[ "$output" =~ "It works!" ]]
 	unset output
 
-	run curl -sSk -I http://test.docksal:2580/nonsense
+	run curl -sSk -I http://test.docksal.site:2580/nonsense
 	[[ "$output" =~ "HTTP/1.1 404 Not Found" ]]
 	unset output
 
@@ -104,11 +104,11 @@ _healthcheck_wait ()
 
 	### Tests ###
 
-	run curl -sSk -I http://test.docksal:2580
+	run curl -sSk -I http://test.docksal.site:2580
 	[[ "$output" =~ "HTTP/1.1 200 OK" ]]
 	unset output
 
-	run curl -sSk http://test.docksal:2580
+	run curl -sSk http://test.docksal.site:2580
 	[[ "$output" =~ "index.html" ]]
 	unset output
 
@@ -131,11 +131,11 @@ _healthcheck_wait ()
 
 	### Tests ###
 
-	run curl -sSk -I http://test.docksal:2580
+	run curl -sSk -I http://test.docksal.site:2580
 	[[ "$output" =~ "HTTP/1.1 200 OK" ]]
 	unset output
 
-	run curl -sSk http://test.docksal:2580
+	run curl -sSk http://test.docksal.site:2580
 	[[ "$output" =~ "index.html" ]]
 	unset output
 
@@ -160,12 +160,12 @@ _healthcheck_wait ()
 	### Tests ###
 
 	# Check authorization is required
-	run curl -sSk -I http://test.docksal:2580
+	run curl -sSk -I http://test.docksal.site:2580
 	[[ "$output" =~ "HTTP/1.1 401 Unauthorized" ]]
 	unset output
 
 	# Check we can pass authorization
-	run curl -sSk -I -u user:pass http://test.docksal:2580
+	run curl -sSk -I -u user:pass http://test.docksal.site:2580
 	[[ "$output" =~ "HTTP/1.1 200 OK" ]]
 	unset output
 
@@ -188,12 +188,12 @@ _healthcheck_wait ()
 	### Tests ###
 
 	# Test default virtual host config overrides
-	run curl -sSk http://test2.docksal:2580
+	run curl -sSk http://test2.docksal.site:2580
 	[[ "$output" =~ "index2.html" ]]
 	unset output
 
 	# Test extra virtual hosts config
-	run curl -sSk -L http://test3.docksal:2580
+	run curl -sSk -L http://test3.docksal.site:2580
 	[[ "$output" =~ "index3.html" ]]
 	unset output
 
