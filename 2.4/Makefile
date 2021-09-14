@@ -1,6 +1,6 @@
 -include ../tests/env_make
 
-FROM ?= httpd:2.4.35-alpine
+FROM ?= httpd:2.4.48-alpine
 VERSION ?= 2.4
 SOFTWARE_VERSION ?= $(VERSION)
 BUILD_TAG ?= $(VERSION)
